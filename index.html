@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PersonaDrive conditions a vision-language-action driving agent on retrieved human demonstrations from a style-instructed dataset. Switching style is a single database swap.">
+  <meta name="keywords" content="PersonaDrive, autonomous driving, vision-language-action, retrieval-augmented generation, driving style, CARLA, Bench2Drive">
+  <title>PersonaDrive: Human-Style Retrieval-Augmented VLA Agents</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Castoro&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+</head>
+<body>
+
+<!-- title -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop has-text-centered">
+      <h1 class="title is-1 publication-title">PersonaDrive</h1>
+      <h2 class="subtitle is-3 publication-subtitle">Human-Style Retrieval-Augmented VLA Agents<br>for Closed-Loop Driving Simulation</h2>
+
+      <div class="is-size-5 publication-authors">
+        <span class="author-block">Mahmoud Srewa,</span>
+        <span class="author-block">Praneetsai Vasu Iddamsetty,</span>
+        <span class="author-block">Mohammad Abdullah Al Faruque,</span>
+        <span class="author-block">Salma Elmalaki</span>
+      </div>
+      <div class="is-size-5 publication-authors">
+        <span class="author-block">University of California, Irvine</span>
+      </div>
+
+      <div class="publication-links">
+        <a class="button is-dark is-rounded" href="https://arxiv.org/pdf/2606.12616">
+          <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span></a>
+        <a class="button is-dark is-rounded" href="https://arxiv.org/abs/2606.12616">
+          <span class="icon"><i class="ai ai-arxiv"></i></span><span>arXiv</span></a>
+        <a class="button is-dark is-rounded" href="#demo">
+          <span class="icon"><i class="fas fa-film"></i></span><span>Video</span></a>
+        <a class="button is-dark is-rounded is-disabled" title="Code release coming soon">
+          <span class="icon"><i class="fab fa-github"></i></span><span>Code (soon)</span></a>
+        <a class="button is-dark is-rounded is-disabled" title="Dataset release coming soon">
+          <span class="icon"><i class="fas fa-database"></i></span><span>Dataset (soon)</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- teaser -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video class="teaser-video" autoplay muted loop playsinline preload="auto" poster="static/videos/teaser.jpg">
+        <source src="static/videos/teaser.webm" type="video/webm">
+        <source src="static/videos/teaser.mp4" type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered teaser-caption">
+        <span class="dnerf">PersonaDrive</span> conditions a vision-language-action (VLA) driving agent on demonstrations
+        retrieved from people who were asked to drive in a given style. Changing the style changes which database is
+        searched; one set of weights serves every style.
+      </h2>
+    </div>
+  </div>
+</section>
+
+<!-- style comparisons -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Same Weights, Different Style Database</h2>
+    <p class="section-lead has-text-centered">
+      Each pair is the same checkpoint on the same Bench2Drive route. The only difference is whether the retrieval head
+      queries the <span class="tag-aggr">aggressive</span> or the <span class="tag-cons">conservative</span> database of
+      human demonstrations.
+    </p>
+
+    <div class="clip">
+      <video autoplay muted loop playsinline preload="metadata" poster="static/videos/style_cyclist.jpg">
+        <source src="static/videos/style_cyclist.webm" type="video/webm">
+        <source src="static/videos/style_cyclist.mp4" type="video/mp4"></video>
+      <p class="clip-caption"><b>Overtaking a cyclist.</b> The aggressive agent passes at the first gap in oncoming
+        traffic and reaches 18.6 m/s. The conservative agent stays behind the cyclist and passes once the road is clear.</p>
+    </div>
+    <div class="clip">
+      <video autoplay muted loop playsinline preload="metadata" poster="static/videos/style_merge.jpg">
+        <source src="static/videos/style_merge.webm" type="video/webm">
+        <source src="static/videos/style_merge.mp4" type="video/mp4"></video>
+      <p class="clip-caption"><b>Cyclists blocking the lane.</b> Both agents stop and wait to merge left. The aggressive
+        agent takes the first gap behind a passing car; the conservative agent merges about 16 s later, once the lane is open.</p>
+    </div>
+    <div class="clip">
+      <video autoplay muted loop playsinline preload="metadata" poster="static/videos/style_turn.jpg">
+        <source src="static/videos/style_turn.webm" type="video/webm">
+        <source src="static/videos/style_turn.mp4" type="video/mp4"></video>
+      <p class="clip-caption"><b>Right turn with crossing traffic.</b> The aggressive agent turns into the first gap. The
+        conservative agent lets more cars pass and turns about 5 s later.</p>
+    </div>
+  </div>
+</section>
+
+<!-- abstract -->
+<section class="section section-alt">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Abstract</h2>
+    <div class="content has-text-justified">
+      <p>
+        Closed-loop driving simulators populate their environments with non-ego traffic agents that behave much the same
+        way, whether from rule-based traffic managers or from learned models trained toward a single behavioral mode.
+        Recent work introduces style variation through post-hoc labels or LLM-inferred reward weights, but these act as
+        proxies for what a style should reward rather than demonstrations of humans explicitly asked to drive in that style.
+      </p>
+      <p>
+        We introduce PersonaDrive, a pipeline that conditions a vision-language-action (VLA) driving agent on retrieved
+        demonstrations from a style-instructed dataset in which 15 participants drive CARLA Leaderboard routes under
+        aggressive, neutral, and conservative instructions on a driver-in-the-loop rig. The pipeline mines behavioral
+        triplets offline with a combined image-text similarity score, trains a lightweight retrieval head fusing frozen
+        visual features with a small control encoder over per-style databases, and fine-tunes one VLA backbone to read
+        retrieved context points as in-context demonstrations. Switching style at inference is a single database swap, so
+        one set of weights serves every style with no per-style retraining.
+      </p>
+      <p>
+        On Bench2Drive, PersonaDrive (no style) improves the driving score by 4.6% over SimLingo and 2.5% over HiP-AD.
+        Under style conditioning it attains the highest driving score in every style within a 2.1-point band
+        (87.55–89.62), its weakest style surpassing the strongest baseline (DMW) by 5.8%, while average speed and
+        acceleration rise by 19.8% and 24.9% from the conservative to the aggressive instruction. Each agent is evaluated
+        individually as a driving policy.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- motivation -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Why Human-Style Traffic Agents?</h2>
+    <div class="content">
+      <p><b>What is missing in simulated traffic?</b><br>
+        Rule-based traffic managers and learned traffic models produce agents that behave alike. Real traffic spans
+        conservative, neutral and aggressive drivers, and those differences matter most at merges, unprotected turns and
+        in dense urban traffic, where the ego policy has to react to the people around it.</p>
+      <p><b>Why not style labels or reward weights?</b><br>
+        Existing personalization methods supervise style with post-hoc observational labels or with reward weights
+        inferred by an LLM. Both approximate what a style should reward. Neither records what people actually do when
+        they are asked to drive in that style.</p>
+      <p><b>What does PersonaDrive do instead?</b><br>
+        We recorded people driving under explicit style instructions and store their frames in one database per style. At
+        every tick, a retrieval head finds the most similar context points in the selected database, and the VLA backbone
+        reads them as in-context demonstrations before predicting its own waypoints.</p>
+    </div>
+
+    <h3 class="title is-4">Contributions</h3>
+    <div class="content">
+      <ol>
+        <li><b>A controlled style driving dataset.</b> 15 drivers drive CARLA Leaderboard routes under aggressive, neutral
+          and conservative instructions on a driver-in-the-loop rig. The design is paired at the route level, which
+          decouples style from driver identity (29,777 frames, 55 routes, 21 scenario types).</li>
+        <li><b>A style-conditioned triplet-RAG architecture.</b> We mine behavioral triplets (Stage 1), train a retrieval
+          head over per-style databases (Stage 2), and fine-tune the VLA backbone to read retrieved context points as
+          in-context demonstrations (Stage 3). Style control comes from retrieved human demonstrations, not from style
+          tokens, proxy rewards or per-style fine-tuning.</li>
+        <li><b>Closed-loop results on Bench2Drive.</b> Without style, PersonaDrive improves the Driving Score by 4.6% over
+          SimLingo (88.95 vs. 85.07) and 2.5% over HiP-AD (86.77). With style conditioning it has the highest Driving
+          Score in every style, its weakest style still 5.8% above the strongest baseline (DMW), while speed and
+          acceleration rise 19.8% and 24.9% from the conservative to the aggressive instruction with no per-style
+          retraining. A retrieval-depth ablation shows open-loop and closed-loop accuracy moving together with the number
+          of retrieved demonstrations on a fixed checkpoint.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- dataset -->
+<section class="section section-alt">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Style-Instructed Driving Dataset</h2>
+    <figure class="figure">
+      <img src="static/images/datacollection.png" alt="Style-instructed data collection overview">
+      <figcaption>Participants drive CARLA Leaderboard scenarios three times, once under each instruction. Each pass
+        records the front-view RGB image, ego state (speed, throttle, steering, command), GPS targets and waypoints; VQA
+        and commentary annotations are added afterwards.</figcaption>
+    </figure>
+
+    <div class="columns is-vcentered rig">
+      <div class="column is-5">
+        <img class="rounded" src="static/images/hardware_rig.jpg" alt="Driver-in-the-loop hardware rig">
+      </div>
+      <div class="column content">
+        <p>Data comes from 15 non-professional drivers with valid licenses on a driver-in-the-loop rig: a Next Level
+          Racing GTrack seat, three 50-inch monitors covering about 130° and a Logitech G923 wheel and pedals. CARLA runs
+          in synchronous mode at 20 Hz. The ego vehicle is the only human-controlled actor and TrafficManager drives the
+          rest of the traffic. Each participant drives the routes in randomized order, once under each instruction.</p>
+      </div>
+    </div>
+
+    <div class="columns instructions">
+      <div class="column"><div class="instr cons"><h4>Conservative</h4>
+        <p>“Target 10–15 mph on surface streets and 25–35 mph on the highway; yield to other vehicles whenever possible.”</p></div></div>
+      <div class="column"><div class="instr neut"><h4>Neutral</h4>
+        <p>“Follow traffic laws, navigate safely, and drive at a reasonable speed.”</p></div></div>
+      <div class="column"><div class="instr aggr"><h4>Aggressive</h4>
+        <p>“Drive as fast as possible without crashing; engage in aggressive behaviors such as tailgating and cutting off merging vehicles.”</p></div></div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table is-fullwidth is-narrow results">
+        <thead><tr><th>Instruction</th><th>Mean (mph)</th><th>In motion (mph)</th><th>Std. dev.</th><th>Stopped (%)</th></tr></thead>
+        <tbody>
+          <tr><td class="cons-txt">Conservative</td><td>9.8</td><td>11.5</td><td>7.6</td><td>14.6</td></tr>
+          <tr><td class="neut-txt">Neutral</td><td>13.2</td><td>15.6</td><td>10.8</td><td>15.7</td></tr>
+          <tr><td class="aggr-txt">Aggressive</td><td>17.5</td><td>21.8</td><td>16.8</td><td>19.8</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Speed statistics of the human data, route-matched over the 55 routes driven under all three
+        instructions. Mean speed separates the instructions before any model is involved.</p>
+    </div>
+  </div>
+</section>
+
+<!-- method -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Method</h2>
+    <figure class="figure">
+      <img src="static/images/architecture.png" alt="PersonaDrive architecture">
+      <figcaption>Offline, the frames of each style are stored in their own FAISS index. Online, the retrieval head
+        encodes the current scene, queries the index of the selected style, and returns the K most similar context
+        points. They are placed before the current observation in the prompt of the VLA backbone, whose waypoints the
+        Route MLP decodes and a PID controller turns into steering, throttle and brake.</figcaption>
+    </figure>
+
+    <div class="columns stages">
+      <div class="column">
+        <h4 class="title is-5"><span class="stage">1</span> Triplet mining</h4>
+        <p>Each frame is written out as a frame sentence (speed, steering, command, VQA annotation, commentary, GPS target
+          and the executed waypoints). A combined score of SigLIP image similarity and BGE-M3 sentence similarity selects
+          positives, easy negatives and hard negatives: frames that look alike but where the driver used a different
+          command or speed.</p>
+      </div>
+      <div class="column">
+        <h4 class="title is-5"><span class="stage">2</span> Retrieval head</h4>
+        <p>Frozen SigLIP features (768-d) are concatenated with a trained ControlEncoder over speed, throttle, steering and
+          command (128-d) and projected to a 1024-d embedding. A weighted triplet loss trains it, with extra weight on
+          hard negatives. One head serves all styles; only the queried index changes.</p>
+      </div>
+      <div class="column">
+        <h4 class="title is-5"><span class="stage">3</span> In-context SFT</h4>
+        <p>The VLA backbone (InternVL2-1B, inherited from SimLingo) is fine-tuned with a rank-16 LoRA to read the K = 2
+          retrieved context points as few-shot examples. It receives no style label and has to infer the style from the
+          demonstrations it is given.</p>
+      </div>
+    </div>
+
+    <figure class="figure">
+      <img src="static/images/triplet.png" alt="Triplet mining and retrieval head training">
+      <figcaption>Stage 1 mining and Stage 2 retrieval head training. Hard negatives are visually similar to the anchor
+        but diverge in command or speed, so a head that relied on images alone would rank them as positives.</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="static/images/triplet_viewer.jpg" alt="Mined triplets for the three styles">
+      <figcaption>Mined triplets (anchor, positive, hard negative, easy negative) for each style.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- retrieval -->
+<section class="section section-alt">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Retrieval in Action</h2>
+    <figure class="figure">
+      <img src="static/images/retrieval_no_style.jpg" alt="Retrieval without a style">
+      <figcaption><b>No style.</b> The query goes to the style-agnostic index, a 5% route-level subset of SimLingo's
+        PDM-Lite data. Both context points come from the rule-based PDM-Lite expert, not from people.</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="static/images/retrieval_styles.jpg" alt="Retrieval from the conservative and aggressive databases">
+      <figcaption><b>Conservative vs. aggressive.</b> The same Bench2Drive frame retrieves different human drivers. Both
+        conservative drivers are still stopped at the junction; one aggressive driver is already moving at 3.0 m/s.
+        Labels give the participant, scenario and town of each retrieved frame.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- driving -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Closed-Loop Driving on Bench2Drive</h2>
+    <p class="section-lead has-text-centered">These runs use no style, so the context points come from the
+      style-agnostic PDM-Lite index. The black panel shows the model's prompt: the two retrieved context points
+      (blue), the current scene, and the commentary PersonaDrive generates (gold).</p>
+    <div class="clip">
+      <video autoplay muted loop playsinline preload="metadata" poster="static/videos/drive_context_rain.jpg">
+        <source src="static/videos/drive_context_rain.webm" type="video/webm">
+        <source src="static/videos/drive_context_rain.mp4" type="video/mp4"></video>
+      <p class="clip-caption"><b>Heavy rain.</b> A parked car pulls out; PersonaDrive stops and lets it in. The retrieved
+        context points on the right update as the car drives.</p>
+    </div>
+    <div class="columns">
+      <div class="column">
+        <video autoplay muted loop playsinline preload="metadata" poster="static/videos/drive_night.jpg">
+          <source src="static/videos/drive_night.webm" type="video/webm">
+        <source src="static/videos/drive_night.mp4" type="video/mp4"></video>
+        <p class="clip-caption"><b>Night and fog.</b> Cones and oncoming traffic narrow the road.</p>
+      </div>
+      <div class="column">
+        <video autoplay muted loop playsinline preload="metadata" poster="static/videos/drive_junction.jpg">
+          <source src="static/videos/drive_junction.webm" type="video/webm">
+        <source src="static/videos/drive_junction.mp4" type="video/mp4"></video>
+        <p class="clip-caption"><b>Unsignalized junction.</b> PersonaDrive turns and matches the car ahead.</p>
+      </div>
+    </div>
+    <div class="clip">
+      <video autoplay muted loop playsinline preload="metadata" poster="static/videos/drive_montage.jpg">
+        <source src="static/videos/drive_montage.webm" type="video/webm">
+        <source src="static/videos/drive_montage.mp4" type="video/mp4"></video>
+    </div>
+  </div>
+</section>
+
+<!-- safety -->
+<section class="section section-alt">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Stopping at a Red Light</h2>
+    <div class="clip">
+      <video autoplay muted loop playsinline preload="metadata" poster="static/videos/safety_red_light.jpg">
+        <source src="static/videos/safety_red_light.webm" type="video/webm">
+        <source src="static/videos/safety_red_light.mp4" type="video/mp4"></video>
+    </div>
+    <div class="columns quotes">
+      <div class="column"><div class="quote good"><span>PersonaDrive</span>
+        “Follow the route. Remain stopped due to the red traffic light.”</div></div>
+      <div class="column"><div class="quote bad"><span>SimLingo</span>
+        “Turn right. Accelerate to reach the speed limit.”</div></div>
+    </div>
+    <p class="section-lead has-text-centered">On the same route, SimLingo turns right on red. PersonaDrive stays stopped
+      for the whole red phase and turns when the light is green. Qualitative example.</p>
+  </div>
+</section>
+
+<!-- results -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Results</h2>
+
+    <h3 class="title is-5">Closed-loop driving without style</h3>
+    <div class="table-wrap">
+      <table class="table is-fullwidth is-narrow results">
+        <thead><tr><th>Method</th><th>DS ↑</th><th>SR (%) ↑</th><th>Eff. ↑</th><th>Comf. ↑</th></tr></thead>
+        <tbody>
+          <tr><td>TCP-traj</td><td>59.90</td><td>30.00</td><td>76.54</td><td>18.08</td></tr>
+          <tr><td>ThinkTwice</td><td>62.44</td><td>31.23</td><td>69.33</td><td>16.22</td></tr>
+          <tr><td>DriveAdapter</td><td>64.22</td><td>33.08</td><td>70.22</td><td>16.01</td></tr>
+          <tr><td>UniAD-Base</td><td>45.81</td><td>16.36</td><td>129.21</td><td>43.58</td></tr>
+          <tr><td>VAD</td><td>42.35</td><td>15.00</td><td>157.94</td><td>46.01</td></tr>
+          <tr><td>HiP-AD</td><td>86.77</td><td>69.09</td><td>203.12</td><td>19.36</td></tr>
+          <tr><td>SimLingo-BASE</td><td>85.94</td><td>66.82</td><td>244.18</td><td>25.49</td></tr>
+          <tr><td>SimLingo</td><td>85.07 ± 0.95</td><td>67.27 ± 2.11</td><td><b>259.23 ± 5.59</b></td><td>33.67 ± 5.72</td></tr>
+          <tr class="ours"><td>PersonaDrive (no style)</td><td><b>88.95</b></td><td><b>72.29</b></td><td>255.15</td><td>28.09</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Bench2Drive, 220 routes (subset of Table 1 in the paper). Driving Score (DS) is route
+        completion reduced by a penalty for each infraction or collision. PersonaDrive queries the style-agnostic index.</p>
+    </div>
+
+    <h3 class="title is-5">Style-conditioned closed-loop driving</h3>
+    <div class="table-wrap">
+      <table class="table is-fullwidth is-narrow results">
+        <thead><tr><th>Method</th><th>Style</th><th>DS ↑</th><th>SR (%) ↑</th><th>Eff. ↑</th><th>Comf. ↑</th><th>Speed (m/s)</th><th>Accel. (m/s²)</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td rowspan="3">SimLingo (style prompt)</td><td>Conservative</td><td>78.18</td><td>65.56</td><td>238.77</td><td>26.99</td><td>7.21</td><td>5.29</td></tr>
+          <tr><td>Neutral</td><td>78.15</td><td>65.85</td><td>241.44</td><td>24.67</td><td>7.37</td><td>5.22</td></tr>
+          <tr><td>Aggressive</td><td>78.56</td><td>65.83</td><td>247.60</td><td>18.61</td><td>7.66</td><td>5.39</td></tr>
+          <tr class="grp"><td rowspan="3">StyleDrive</td><td>Conservative</td><td>77.02</td><td>61.96</td><td>242.18</td><td>23.67</td><td>6.82</td><td>5.39</td></tr>
+          <tr><td>Neutral</td><td>76.26</td><td>62.13</td><td>249.07</td><td>21.35</td><td>6.98</td><td>5.43</td></tr>
+          <tr><td>Aggressive</td><td>75.68</td><td>60.89</td><td>256.71</td><td>16.79</td><td>7.23</td><td>5.59</td></tr>
+          <tr class="grp"><td rowspan="3">DMW</td><td>Conservative</td><td>82.72</td><td>71.56</td><td>237.06</td><td><b>34.62</b></td><td>6.18</td><td>5.26</td></tr>
+          <tr><td>Neutral</td><td>82.03</td><td><b>70.95</b></td><td>244.98</td><td>28.67</td><td>6.34</td><td>5.43</td></tr>
+          <tr><td>Aggressive</td><td>79.50</td><td>67.36</td><td><b>281.56</b></td><td>21.62</td><td>7.72</td><td>6.01</td></tr>
+          <tr class="grp ours"><td rowspan="3">PersonaDrive</td><td>Conservative</td><td><b>89.62</b></td><td><b>73.57</b></td><td><b>258.44</b></td><td>33.05</td><td>5.05</td><td>3.17</td></tr>
+          <tr class="ours"><td>Neutral</td><td><b>87.55</b></td><td>69.50</td><td><b>264.83</b></td><td><b>31.20</b></td><td>5.52</td><td>3.51</td></tr>
+          <tr class="ours"><td>Aggressive</td><td><b>88.69</b></td><td><b>72.56</b></td><td>269.20</td><td><b>27.85</b></td><td>6.05</td><td>3.96</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Baselines follow the comparison protocol of Drive My Way (DMW). PersonaDrive's speed rises
+        19.8% and its acceleration 24.9% from conservative to aggressive, in order; SimLingo prompted with the style name
+        changes speed by 6.2% and its acceleration is not ordered.</p>
+    </div>
+
+    <h3 class="title is-5">Retrieval depth</h3>
+    <div class="table-wrap">
+      <table class="table is-fullwidth is-narrow results">
+        <thead><tr><th>Metric</th><th>K = 0</th><th>K = 1</th><th>K = 2</th><th>K = 3</th><th>K = 4</th></tr></thead>
+        <tbody>
+          <tr><td>ADE (m) ↓</td><td>0.820</td><td>0.880</td><td class="ours-cell">0.795</td><td>0.793</td><td>0.791</td></tr>
+          <tr><td>FDE (m) ↓</td><td>1.787</td><td>1.961</td><td class="ours-cell">1.699</td><td>1.650</td><td>1.648</td></tr>
+          <tr><td>DS ↑</td><td>85.07</td><td>81.55</td><td class="ours-cell">88.95</td><td>89.16</td><td>89.30</td></tr>
+          <tr><td>SR (%) ↑</td><td>67.27</td><td>62.17</td><td class="ours-cell">72.29</td><td>72.35</td><td>73.10</td></tr>
+          <tr><td>Tokens ↓</td><td>547</td><td>1292</td><td class="ours-cell">2030</td><td>2769</td><td>3507</td></tr>
+          <tr><td>Latency (ms) ↓</td><td>480.3</td><td>509.6</td><td class="ours-cell">557.7</td><td>599.4</td><td>649.7</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">K = 0 is the SimLingo backbone with retrieval disabled; K ≥ 1 use the same PersonaDrive
+        checkpoint. We operate at K = 2, which adds 77.4 ms per tick over SimLingo.</p>
+    </div>
+
+    <h3 class="title is-5">Bench2Drive leaderboard, LLM/VLA methods</h3>
+    <div class="table-wrap">
+      <table class="table is-fullwidth is-narrow results">
+        <thead><tr><th>Method</th><th>VLA backbone</th><th>Driving style</th><th>DS ↑</th></tr></thead>
+        <tbody>
+          <tr><td>LinkVLA</td><td>InternVL2-1B</td><td>–</td><td>91.01</td></tr>
+          <tr><td>SteerVLA</td><td>InternVL2-1B</td><td>–</td><td>91.00</td></tr>
+          <tr><td>FIVE-VLA</td><td>FastVLM (0.64B)</td><td>–</td><td>90.95</td></tr>
+          <tr><td>BLUE</td><td>SimLingo (1B) + gate</td><td>–</td><td>90.58</td></tr>
+          <tr><td>RoG-DAgger</td><td>SimLingo (1B)</td><td>–</td><td>90.34</td></tr>
+          <tr><td>TakeVLA</td><td>InternViT + Qwen2-0.5B</td><td>–</td><td>89.72</td></tr>
+          <tr class="ours"><td>PersonaDrive (conservative style)</td><td>InternVL2-1B</td><td>✓</td><td><b>89.62</b></td></tr>
+          <tr><td>AutoMoT</td><td>Qwen3-VL-4B</td><td>–</td><td>89.42</td></tr>
+          <tr><td>VLADriver-RAG</td><td>50M decoder + CLIP</td><td>–</td><td>89.12</td></tr>
+          <tr class="ours"><td>PersonaDrive (no style)</td><td>InternVL2-1B</td><td>✓</td><td><b>88.95</b></td></tr>
+          <tr><td>SimLingo</td><td>InternVL2-1B</td><td>–</td><td>85.07</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Self-reported scores from the
+        <a href="https://github.com/autonomousvision/Bench2Drive-Leaderboard">Bench2Drive Leaderboard</a> (updated
+        24 Sep 2026), LLM/VLA entries at or above SimLingo. The conservative-style row is our result from the paper
+        (Table 3); the no-style row is the listed entry. PersonaDrive is the only method in this list that can change its
+        driving style at inference.</p>
+    </div>
+  </div>
+</section>
+
+<!-- demo video -->
+<section class="section section-alt" id="demo">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Demo Video</h2>
+    <video class="demo-video" controls playsinline preload="none" poster="static/videos/demo_full.jpg">
+      <source src="static/videos/demo_full.webm" type="video/webm">
+        <source src="static/videos/demo_full.mp4" type="video/mp4">
+    </video>
+  </div>
+</section>
+
+<!-- bibtex -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <div class="bibtex">
+      <button class="button is-small copy-btn" type="button" data-target="bibtex-code">
+        <span class="icon"><i class="far fa-copy"></i></span><span>Copy</span></button>
+      <pre><code id="bibtex-code">@article{srewa2026personadrive,
+  title   = {PersonaDrive: Human-Style Retrieval-Augmented VLA Agents for Closed-Loop Driving Simulation},
+  author  = {Srewa, Mahmoud and Iddamsetty, Praneetsai Vasu and Al Faruque, Mohammad Abdullah and Elmalaki, Salma},
+  journal = {arXiv preprint arXiv:2606.12616},
+  year    = {2026}
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container is-max-desktop">
+    <div class="content has-text-centered">
+      <p>Page layout follows the <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> project page,
+        licensed under <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="static/js/index.js"></script>
+</body>
+</html>
