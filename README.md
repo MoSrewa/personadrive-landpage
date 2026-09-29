@@ -3,7 +3,7 @@
 Project page for our paper
 [PersonaDrive: Human-Style Retrieval-Augmented VLA Agents for Closed-Loop Driving Simulation](https://arxiv.org/abs/2606.12616).
 
-Live at https://mosrewa.github.io/personadrive-landpage/
+Live at https://pervasiveautonomylab.github.io/personadrive-landpage/
 
 It's a plain static page (HTML + CSS, Bulma from a CDN), so there is nothing to build. GitHub Pages serves it
 straight from `main`.
