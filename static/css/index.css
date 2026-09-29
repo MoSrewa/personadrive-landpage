@@ -135,8 +135,14 @@ table.results th { color: var(--muted); font-weight: 600; border-bottom-width: 2
 table.results td { vertical-align: middle; font-variant-numeric: tabular-nums; }
 table.results tr.grp td { border-top: 2px solid var(--rule); }
 table.results tr.ours td, table.results td.ours-cell { background: #e8f1f8; }
-table.results tr.ours td:first-child { color: var(--accent); font-weight: 600; }
+table.results td.name { color: var(--accent); font-weight: 600; }
 .table-note { color: var(--muted); font-size: 0.88rem; line-height: 1.5; margin-top: 0.4rem; }
+
+/* acknowledgements */
+.ack .content p { line-height: 1.65; }
+.ack-logo { width: 110px; height: 110px; object-fit: contain; display: block; margin: 0 auto; }
+.publication-authors a { color: var(--accent); }
+.publication-authors a:hover { text-decoration: underline; }
 
 /* bibtex */
 .bibtex { position: relative; }

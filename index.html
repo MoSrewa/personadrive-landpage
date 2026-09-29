@@ -23,10 +23,10 @@
       <h2 class="subtitle is-3 publication-subtitle">Human-Style Retrieval-Augmented VLA Agents<br>for Closed-Loop Driving Simulation</h2>
 
       <div class="is-size-5 publication-authors">
-        <span class="author-block">Mahmoud Srewa,</span>
-        <span class="author-block">Praneetsai Vasu Iddamsetty,</span>
-        <span class="author-block">Mohammad Abdullah Al Faruque,</span>
-        <span class="author-block">Salma Elmalaki</span>
+        <span class="author-block"><a href="https://www.linkedin.com/in/mahmoud-srewa-921727140/">Mahmoud Srewa</a>,</span>
+        <span class="author-block"><a href="https://www.linkedin.com/in/praneet-iddamsetty/">Praneetsai Vasu Iddamsetty</a>,</span>
+        <span class="author-block"><a href="https://aicps.eng.uci.edu/">Mohammad Abdullah Al Faruque</a>,</span>
+        <span class="author-block"><a href="https://faculty.sites.uci.edu/elmalaki/">Salma Elmalaki</a></span>
       </div>
       <div class="is-size-5 publication-authors">
         <span class="author-block">University of California, Irvine</span>
@@ -355,7 +355,7 @@
           <tr><td>HiP-AD</td><td>86.77</td><td>69.09</td><td>203.12</td><td>19.36</td></tr>
           <tr><td>SimLingo-BASE</td><td>85.94</td><td>66.82</td><td>244.18</td><td>25.49</td></tr>
           <tr><td>SimLingo</td><td>85.07 ± 0.95</td><td>67.27 ± 2.11</td><td><b>259.23 ± 5.59</b></td><td>33.67 ± 5.72</td></tr>
-          <tr class="ours"><td>PersonaDrive (no style)</td><td><b>88.95</b></td><td><b>72.29</b></td><td>255.15</td><td>28.09</td></tr>
+          <tr class="ours"><td class="name">PersonaDrive (no style)</td><td><b>88.95</b></td><td><b>72.29</b></td><td>255.15</td><td>28.09</td></tr>
         </tbody>
       </table>
       <p class="table-note">Bench2Drive, 220 routes (subset of Table 1 in the paper). Driving Score (DS) is route
@@ -376,7 +376,7 @@
           <tr class="grp"><td rowspan="3">DMW</td><td>Conservative</td><td>82.72</td><td>71.56</td><td>237.06</td><td><b>34.62</b></td><td>6.18</td><td>5.26</td></tr>
           <tr><td>Neutral</td><td>82.03</td><td><b>70.95</b></td><td>244.98</td><td>28.67</td><td>6.34</td><td>5.43</td></tr>
           <tr><td>Aggressive</td><td>79.50</td><td>67.36</td><td><b>281.56</b></td><td>21.62</td><td>7.72</td><td>6.01</td></tr>
-          <tr class="grp ours"><td rowspan="3">PersonaDrive</td><td>Conservative</td><td><b>89.62</b></td><td><b>73.57</b></td><td><b>258.44</b></td><td>33.05</td><td>5.05</td><td>3.17</td></tr>
+          <tr class="grp ours"><td rowspan="3" class="name">PersonaDrive</td><td>Conservative</td><td><b>89.62</b></td><td><b>73.57</b></td><td><b>258.44</b></td><td>33.05</td><td>5.05</td><td>3.17</td></tr>
           <tr class="ours"><td>Neutral</td><td><b>87.55</b></td><td>69.50</td><td><b>264.83</b></td><td><b>31.20</b></td><td>5.52</td><td>3.51</td></tr>
           <tr class="ours"><td>Aggressive</td><td><b>88.69</b></td><td><b>72.56</b></td><td>269.20</td><td><b>27.85</b></td><td>6.05</td><td>3.96</td></tr>
         </tbody>
@@ -414,10 +414,10 @@
           <tr><td>BLUE</td><td>SimLingo (1B) + gate</td><td>–</td><td>90.58</td></tr>
           <tr><td>RoG-DAgger</td><td>SimLingo (1B)</td><td>–</td><td>90.34</td></tr>
           <tr><td>TakeVLA</td><td>InternViT + Qwen2-0.5B</td><td>–</td><td>89.72</td></tr>
-          <tr class="ours"><td>PersonaDrive (conservative style)</td><td>InternVL2-1B</td><td>✓</td><td><b>89.62</b></td></tr>
+          <tr class="ours"><td class="name">PersonaDrive (conservative style)</td><td>InternVL2-1B</td><td>✓</td><td><b>89.62</b></td></tr>
           <tr><td>AutoMoT</td><td>Qwen3-VL-4B</td><td>–</td><td>89.42</td></tr>
           <tr><td>VLADriver-RAG</td><td>50M decoder + CLIP</td><td>–</td><td>89.12</td></tr>
-          <tr class="ours"><td>PersonaDrive (no style)</td><td>InternVL2-1B</td><td>✓</td><td><b>88.95</b></td></tr>
+          <tr class="ours"><td class="name">PersonaDrive (no style)</td><td>InternVL2-1B</td><td>✓</td><td><b>88.95</b></td></tr>
           <tr><td>SimLingo</td><td>InternVL2-1B</td><td>–</td><td>85.07</td></tr>
         </tbody>
       </table>
@@ -454,6 +454,26 @@
   journal = {arXiv preprint arXiv:2606.12616},
   year    = {2026}
 }</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- acknowledgements -->
+<section class="section" id="acknowledgements">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Acknowledgements</h2>
+    <div class="columns is-vcentered is-centered ack">
+      <div class="column is-narrow">
+        <a href="https://www.nsf.gov/awardsearch/show-award/?AWD_ID=2339266"><img class="ack-logo" src="static/images/nsf_logo.png" alt="U.S. National Science Foundation"></a>
+      </div>
+      <div class="column content">
+        <p>This work is supported by the U.S. National Science Foundation (NSF) under grant number 2339266 and is
+          partially supported by the UCI ProperAI Institute, an Engineering+Society Institute funded as part of a
+          generous gift from Susan and Henry Samueli.</p>
+      </div>
+      <div class="column is-narrow">
+        <img class="ack-logo" src="static/images/properai_logo.png" alt="UC Irvine Engineering+ Society on AI (ProperAI Institute)">
+      </div>
     </div>
   </div>
 </section>
